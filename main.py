@@ -31,6 +31,5 @@ somma_mese = df_pulito.groupby(["MESE","CATEGORIA"])["IMPORTO"].sum()
 
 
 if __name__ =="__main__":
-    print(somma_mese.keys())
-    print(f.alert_categoria(somma_mese))
 
+    (f.alert_categoria(somma_mese))

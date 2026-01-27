@@ -1,4 +1,5 @@
 
+
 categorie = {
     "BENZINA":{
         "causali" : ["benzina","benza"],
@@ -35,8 +36,11 @@ categorie = {
     "TASSE/FISSO":{
         "causali":["730","ILIAD","BOLLO CARTA"],
         "limite":15
+    },
+    "ALTRO":{
+        "causali":[],
+        "limite":0
     }
-
 }
 
 def trova_categoria(a:str):
@@ -47,18 +51,19 @@ def trova_categoria(a:str):
                 return x
     return "ALTRO"
 
+
 def alert_categoria(somma_mese):
+
     for x,y in somma_mese.items():
-        for categoria,limite in categorie.items():
-            if y >= limite["limite"]:
-                print("\nALERTTTTTT!!!!\n")
-                return f"in{x,y}MAGGIORE DI {categorie['limite']}"
-        else:
-            print("\nOK\n")
-            return f"in{x,y}MINORI DI {categorie['limite']}"
+        if y > categorie[x[1]]["limite"]:
+            print( f"\n-ALERT|{x[1]}|{x[0]}\n hai speso:{y}$ | limite:{categorie[x[1]]['limite']}$\n")
+
+
+
+
 
 
 
 if __name__ == "__main__":
-    print(trova_categoria("pizza"))
-    print(categorie.values())
+    print(trova_categoria("ti amo benny"))
+
