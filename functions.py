@@ -1,9 +1,13 @@
-
+from datetime import datetime,timedelta
 
 categorie = {
     "BENZINA":{
         "causali" : ["benzina","benza"],
         "limite" : 140
+    },
+    "STIPENDIO":{
+        "causali" : ["stipendio"],
+        "limite" : 1000000
     },
     "CIBO":{
         "causali": ["pizza","sushi","colazione","merenda","gelato","piadina","poke","kfc","mangiare","focaccia","bar","caffe","brioches","tiramisu","frappe","birra","drink","snack"],
@@ -14,7 +18,7 @@ categorie = {
         "limite":1000
     },
     "RIVENDITA/BUSINESS":{
-        "causali":["vinted","puff","sbuff","iphone","PANT JORDAN","PANTALONCINI","POLO RALPH"],
+        "causali":["vinted","buoni","puff","sbuff","iphone","PANT JORDAN","PANTALONCINI","POLO RALPH"],
         "limite":200
     },
     "SCOMMESSE":{
@@ -44,7 +48,7 @@ categorie = {
 }
 
 def trova_categoria(a:str):
-    a = str(a).lower()
+    a = str(a).lower()#devi mettere DATAFRAME + COLONNA CAUSALE
     for x,y in categorie.items():
         for elemento in y["causali"]:
             if elemento in a:
@@ -52,11 +56,32 @@ def trova_categoria(a:str):
     return "ALTRO"
 
 
-def alert_categoria(somma_mese):
+def alert_category(somma_mese):
 
     for x,y in somma_mese.items():
         if y > categorie[x[1]]["limite"]:
             print( f"\n-ALERT|{x[1]}|{x[0]}\n hai speso:{y}$ | limite:{categorie[x[1]]['limite']}$\n")
+
+def predict_next_month(data_frame):
+    date_limit = data_frame["DATA"].max() - timedelta(days=90)
+    expense = data_frame[data_frame["DATA"] >=date_limit]
+    all_expense = (expense.groupby(["CATEGORIA"])["IMPORTO"].sum() / 3).round(2)
+    for x,y in all_expense.items():
+            stato =""
+            if abs(y) > categorie[x]["limite"]:
+                stato ="🔴" 
+            else:
+                stato = "🟢"
+                
+
+            print(f"\n-CATEGORIA |{x}\n Prediction {abs(y)}$ | Limite:{categorie[x]['limite']}$ | {stato}\n")
+            
+
+
+
+
+
+
 
 
 
@@ -65,5 +90,5 @@ def alert_categoria(somma_mese):
 
 
 if __name__ == "__main__":
-    print(trova_categoria("ti amo benny"))
 
+    print("data")

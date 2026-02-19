@@ -1,9 +1,12 @@
+
 import pandas as pd
 import functions as f
+from functions import predict_next_month, alert_category, trova_categoria
 
 df = pd.ExcelFile("ROUTINE.xlsx")
-
+foglio_corrente = pd.read_excel("ROUTINE.xlsx",sheet_name="BILANCIO DICEMBRE 25",header=2)
 df_da_modificare = []
+
 for sheet in df.sheet_names:
     if "BILANCIO" in sheet:
         foglio_corrente = pd.read_excel("ROUTINE.xlsx",sheet_name=sheet,header=2)
@@ -22,14 +25,15 @@ df_pulito["ENTRATA"] = pd.to_numeric(df_pulito["ENTRATA"],errors="coerce")
 df_pulito["USCITA"] = pd.to_numeric(df_pulito["USCITA"],errors="coerce")
 df_pulito["IMPORTO"] =  df_pulito["ENTRATA"].fillna(0) - df_pulito["USCITA"].fillna(0)
 df_pulito["CATEGORIA"] = df_pulito["CAUSALE"].apply(f.trova_categoria)
-
+df_pulito["DATA"] = pd.to_datetime(df_pulito["DATA"],errors="coerce")
 somma_mese = df_pulito.groupby(["MESE","CATEGORIA"])["IMPORTO"].sum()
-
-
+alert = df_pulito.groupby(["MESE","CATEGORIA"])["IMPORTO"].sum().unstack().fillna(0)
 
 
 
 
 if __name__ =="__main__":
+    #alert_category(somma_mese)
+    print(predict_next_month(df_pulito))
 
-    (f.alert_categoria(somma_mese))
+
